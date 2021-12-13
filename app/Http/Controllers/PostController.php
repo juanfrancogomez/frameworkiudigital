@@ -15,7 +15,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::orderBy('id', 'ASC')->paginate(10);
+        return view('dashboard.post.index',['posts'=>$posts]);
     }
 
     /**
@@ -25,7 +26,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('dashboard.post.create');
+        return view('dashboard.post.create', ['post'=> new Post()]);
     }
 
     /**
@@ -34,10 +35,10 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store((PostStore $request)
+    public function store(PostStore $request)
     {
         Post::create($request -> validated());
-        return back()->with('status','Publicación creada con éxito');
+        return back() ->with('status','Publicación creada con éxito');
     }
 
     /**
@@ -48,7 +49,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        return view('dashboard.post.show',['post'=>$post]);
     }
 
     /**
@@ -59,7 +60,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        return view('dashboard.post.edit',['post'=>$post]);
     }
 
     /**
@@ -69,9 +70,10 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(PostStore $request, Post $post)
     {
-        //
+        $post->update($request -> validated());
+        return back() ->with('status','Publicación actualizada con éxito');
     }
 
     /**
@@ -82,6 +84,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        return back() ->with('status','Publicación eliminada con éxito');
     }
 }
